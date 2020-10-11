@@ -26,10 +26,10 @@
     "react",
     "react-hooks",
     "prettier",
-    "@typescript-eslint",
-    "import-helpers"
+    "@typescript-eslint"
   ],
   "rules": {
+    "react/prop-types": "off",
     "prettier/prettier": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
@@ -39,31 +39,6 @@
         "extensions": [
           ".tsx"
         ]
-      }
-    ],
-    "import-helpers/order-imports": [
-      "warn",
-      {
-        "newlines-between": "always",
-        "groups": [
-          [
-            "/^react/"
-          ],
-          [
-            "builtin",
-            "external",
-            "internal"
-          ],
-          [
-            "parent",
-            "sibling",
-            "index"
-          ]
-        ],
-        "alphabetize": {
-          "order": "asc",
-          "ignoreCase": true
-        }
       }
     ],
     "import/prefer-default-export": "off",
