@@ -14,6 +14,15 @@ interface Country {
   value: string;
 }
 
+interface CountryInfo {
+  todayCases: number;
+  todayRecovered: number;
+  todayDeaths: number;
+  cases: number;
+  recovered: number;
+  deaths: number;
+}
+
 interface COVID19CountriesResponse {
   country: string;
   countryInfo: {
@@ -24,6 +33,15 @@ interface COVID19CountriesResponse {
 const Dashboard: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountryCode, setSelectedCountryCode] = useState('worldwide');
+  const [selectedCountryInfo, setSelectedCountryInfo] = useState<CountryInfo>(
+    {} as CountryInfo,
+  );
+
+  useEffect(() => {
+    api.get('all').then(response => {
+      setSelectedCountryInfo(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     api.get<COVID19CountriesResponse[]>('countries').then(response => {
@@ -37,10 +55,17 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const handleSelectCountryCode = useCallback(
-    (event: ChangeEvent<{ value: unknown }>) => {
+    async (event: ChangeEvent<{ value: unknown }>) => {
       const countryCode = event.target.value as string;
 
       setSelectedCountryCode(countryCode);
+
+      const url =
+        countryCode === 'worldwide' ? 'all' : `countries/${countryCode}`;
+
+      const response = await api.get(url);
+
+      setSelectedCountryInfo(response.data);
     },
     [],
   );
@@ -65,9 +90,21 @@ const Dashboard: React.FC = () => {
         </Header>
 
         <Stats>
-          <InfoBox title="Casos confirmados" cases={5000} total={2000} />
-          <InfoBox title="Recuperados" cases={5000} total={3000} />
-          <InfoBox title="Mortes" cases={5000} total={400} />
+          <InfoBox
+            title="Casos Confirmados"
+            cases={selectedCountryInfo.todayCases}
+            total={selectedCountryInfo.cases}
+          />
+          <InfoBox
+            title="Recuperados"
+            cases={selectedCountryInfo.todayRecovered}
+            total={selectedCountryInfo.recovered}
+          />
+          <InfoBox
+            title="Mortes"
+            cases={selectedCountryInfo.todayDeaths}
+            total={selectedCountryInfo.deaths}
+          />
         </Stats>
 
         <Map />
