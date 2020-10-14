@@ -2,16 +2,23 @@ import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
 
 import { MenuItem, Select, CardContent } from '@material-ui/core';
 
-import api from '../../services/api';
-
 import InfoBox from '../../components/InfoBox';
 import Map from '../../components/Map';
+import Table from '../../components/Table';
+
+import api from '../../services/api';
+import sortData from '../../utils/sortData';
 
 import { Container, Header, Dropdown, Stats, Left, Right } from './styles';
 
 interface Country {
   name: string;
   value: string;
+}
+
+export interface TableData {
+  name: string;
+  totalCases: number;
 }
 
 interface CountryInfo {
@@ -28,11 +35,13 @@ interface COVID19CountriesResponse {
   countryInfo: {
     iso2: string;
   };
+  cases: number;
 }
 
 const Dashboard: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountryCode, setSelectedCountryCode] = useState('worldwide');
+  const [tableData, setTableData] = useState<TableData[]>([]);
   const [selectedCountryInfo, setSelectedCountryInfo] = useState<CountryInfo>(
     {} as CountryInfo,
   );
@@ -44,12 +53,21 @@ const Dashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    api.get<COVID19CountriesResponse[]>('countries').then(response => {
+    api.get<COVID19CountriesResponse[]>('countries').then(({ data }) => {
       setCountries(
-        response.data.map(country => ({
+        data.map(country => ({
           name: country.country,
           value: country.countryInfo.iso2,
         })),
+      );
+
+      setTableData(
+        sortData(
+          data.map(country => ({
+            name: country.country,
+            totalCases: country.cases,
+          })),
+        ),
       );
     });
   }, []);
@@ -113,7 +131,8 @@ const Dashboard: React.FC = () => {
       <Right>
         <CardContent>
           <h3>Casos em Tempo Real por País</h3>
-          <h3>Novos casos mundiais</h3>
+          <Table countries={tableData} />
+          <h3>Casos confirmados no mundo</h3>
         </CardContent>
       </Right>
     </Container>
