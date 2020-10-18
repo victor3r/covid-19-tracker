@@ -12,14 +12,16 @@ const Table: React.FC<TableProps> = ({ countries }) => {
   return (
     <Container>
       <table>
-        {countries.map(({ name, totalCases }) => (
-          <tr>
-            <td>{name}</td>
-            <td>
-              <strong>{totalCases}</strong>
-            </td>
-          </tr>
-        ))}
+        <tbody>
+          {countries.map(({ name, totalCases }) => (
+            <tr key={name}>
+              <td>{name}</td>
+              <td>
+                <strong>{totalCases}</strong>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </Container>
   );

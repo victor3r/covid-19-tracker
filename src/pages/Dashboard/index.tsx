@@ -5,6 +5,7 @@ import { MenuItem, Select, CardContent } from '@material-ui/core';
 import InfoBox from '../../components/InfoBox';
 import Map from '../../components/Map';
 import Table from '../../components/Table';
+import LineGraph from '../../components/LineGraph';
 
 import api from '../../services/api';
 import sortData from '../../utils/sortData';
@@ -32,10 +33,10 @@ interface CountryInfo {
 
 interface COVID19CountriesResponse {
   country: string;
+  cases: number;
   countryInfo: {
     iso2: string;
   };
-  cases: number;
 }
 
 const Dashboard: React.FC = () => {
@@ -101,7 +102,9 @@ const Dashboard: React.FC = () => {
             >
               <MenuItem value="worldwide">Mundial</MenuItem>
               {countries.map(country => (
-                <MenuItem value={country.value}>{country.name}</MenuItem>
+                <MenuItem key={country.name} value={country.value}>
+                  {country.name}
+                </MenuItem>
               ))}
             </Select>
           </Dropdown>
@@ -133,6 +136,7 @@ const Dashboard: React.FC = () => {
           <h3>Casos em Tempo Real por País</h3>
           <Table countries={tableData} />
           <h3>Casos confirmados no mundo</h3>
+          <LineGraph />
         </CardContent>
       </Right>
     </Container>
