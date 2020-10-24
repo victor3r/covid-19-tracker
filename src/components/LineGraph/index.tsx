@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Line } from 'react-chartjs-2';
 
 import api from '../../services/api';
-import graphOptions from '../../config/graphOptions';
+import graphConfig from '../../config/graph';
 
 import { Container } from './styles';
 
@@ -54,7 +54,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ historicalType = 'cases' }) => {
   return (
     <Container>
       <Line
-        options={graphOptions}
+        options={graphConfig}
         data={{
           datasets: [
             {
