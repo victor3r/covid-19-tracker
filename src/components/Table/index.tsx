@@ -1,4 +1,5 @@
 import React from 'react';
+import numeral from 'numeral';
 
 import { TableData } from '../../pages/Dashboard';
 
@@ -17,7 +18,7 @@ const Table: React.FC<TableProps> = ({ countries }) => {
             <tr key={name}>
               <td>{name}</td>
               <td>
-                <strong>{totalCases}</strong>
+                <strong>{numeral(totalCases).format('0,0')}</strong>
               </td>
             </tr>
           ))}

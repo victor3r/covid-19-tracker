@@ -1,5 +1,7 @@
 import React from 'react';
 import { CardContent } from '@material-ui/core';
+import numeral from 'numeral';
+
 import { Container, Cases, Title, Total } from './styles';
 
 interface InfoBoxProps {
@@ -13,8 +15,10 @@ const InfoBox: React.FC<InfoBoxProps> = ({ title, cases, total }) => {
     <Container>
       <CardContent>
         <Title color="textSecondary">{title}</Title>
-        <Cases>{cases}</Cases>
-        <Total color="textSecondary">{`${total} Total`}</Total>
+        <Cases>{numeral(cases).format('0,0')}</Cases>
+        <Total color="textSecondary">
+          {`${numeral(total).format('0,0')} Total`}
+        </Total>
       </CardContent>
     </Container>
   );

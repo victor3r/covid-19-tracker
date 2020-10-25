@@ -1,10 +1,17 @@
 import React from 'react';
 import { Map as LeafletMap, TileLayer, Circle, Popup } from 'react-leaflet';
+import numeral from 'numeral';
 
 import { MapCountry } from '../../pages/Dashboard';
 import casesTypeColors from '../../utils/casesTypeColors';
 
-import { Container } from './styles';
+import {
+  Container,
+  InfoContainer,
+  InfoFlag,
+  InfoName,
+  InfoCases,
+} from './styles';
 
 interface MapProps {
   countries: MapCountry[];
@@ -32,7 +39,25 @@ const Map: React.FC<MapProps> = ({ countries, casesType, center, zoom }) => {
               country[casesType] * casesTypeColors[casesType].multiplier,
             )}
           >
-            <Popup>IM A POPUP</Popup>
+            <Popup>
+              <InfoContainer>
+                <InfoFlag
+                  style={{
+                    backgroundImage: `url(${country.flag})`,
+                  }}
+                />
+                <InfoName>{country.country}</InfoName>
+                <InfoCases>
+                  {`Casos: ${numeral(country.cases).format('0,0')}`}
+                </InfoCases>
+                <InfoCases>
+                  {`Recuperados: ${numeral(country.recovered).format('0,0')}`}
+                </InfoCases>
+                <InfoCases>
+                  {`Mortes: ${numeral(country.deaths).format('0,0')}`}
+                </InfoCases>
+              </InfoContainer>
+            </Popup>
           </Circle>
         ))}
       </LeafletMap>

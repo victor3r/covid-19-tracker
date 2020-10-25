@@ -24,6 +24,7 @@ export interface MapCountry {
   cases: number;
   recovered: number;
   deaths: number;
+  flag: string;
 }
 
 export interface TableData {
@@ -52,6 +53,7 @@ interface COVID19CountryInfoResponse {
     iso2: string;
     lat: number;
     long: number;
+    flag: string;
   };
 }
 
@@ -99,7 +101,7 @@ const Dashboard: React.FC = () => {
             deaths,
             recovered,
             country,
-            countryInfo: { lat, long },
+            countryInfo: { lat, long, flag },
           }) => ({
             lat,
             lng: long,
@@ -107,6 +109,7 @@ const Dashboard: React.FC = () => {
             deaths,
             recovered,
             country,
+            flag,
           }),
         ),
       );
