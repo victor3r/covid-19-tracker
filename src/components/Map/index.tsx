@@ -34,7 +34,6 @@ const Map: React.FC<MapProps> = ({ countries, casesType, center, zoom }) => {
             center={[country.lat, country.lng]}
             fillOpacity={0.4}
             color={casesTypeColors[casesType].hex}
-            // fillColor={casesTypeColors[casesType].hex}
             radius={Math.sqrt(
               country[casesType] * casesTypeColors[casesType].multiplier,
             )}

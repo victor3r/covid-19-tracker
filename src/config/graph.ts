@@ -15,13 +15,13 @@ export default {
   scales: {
     xAxes: [
       {
+        gridLines: { display: false },
         type: 'time',
         time: { parser: 'MM/DD/YY', tooltipFormat: 'll' },
       },
     ],
     yAxes: [
       {
-        gridLines: { display: false },
         ticks: {
           callback: (value: number, index: unknown, values: unknown): string =>
             numeral(value).format('0a'),

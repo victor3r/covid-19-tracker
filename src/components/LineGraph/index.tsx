@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 
 import api from '../../services/api';
 import graphConfig from '../../config/graph';
+import casesTypeColors from '../../utils/casesTypeColors';
 
 import { Container } from './styles';
 
@@ -24,10 +25,10 @@ interface Historical {
 }
 
 interface LineGraphProps {
-  historicalType?: 'cases' | 'deaths' | 'recovered';
+  historicalType: 'cases' | 'deaths' | 'recovered';
 }
 
-const LineGraph: React.FC<LineGraphProps> = ({ historicalType = 'cases' }) => {
+const LineGraph: React.FC<LineGraphProps> = ({ historicalType }) => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
   const buildChartData = useCallback(
@@ -58,8 +59,8 @@ const LineGraph: React.FC<LineGraphProps> = ({ historicalType = 'cases' }) => {
         data={{
           datasets: [
             {
-              backgroundColor: 'rgba(204,16,52,0.5)',
-              borderColor: '#CC1034',
+              backgroundColor: casesTypeColors[historicalType].half_op,
+              borderColor: casesTypeColors[historicalType].hex,
               data: chartData,
             },
           ],

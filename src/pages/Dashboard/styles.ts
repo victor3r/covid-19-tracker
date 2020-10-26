@@ -18,9 +18,16 @@ export const Header = styled.header`
   align-items: center;
   margin-bottom: 1.25rem;
   justify-content: space-between;
+
+  & > h1 {
+    color: #fc3c3c;
+    font-size: 2rem;
+  }
 `;
 
-export const Dropdown = styled(FormControl)``;
+export const Dropdown = styled(FormControl)`
+  background-color: white;
+`;
 
 export const Stats = styled.div`
   display: flex;
@@ -31,4 +38,16 @@ export const Left = styled.main`
   flex: 0.9;
 `;
 
-export const Right = styled(Card)``;
+export const Right = styled(Card)`
+  display: flex;
+
+  & .MuiCardContent-root {
+    display: flex;
+    flex-direction: column;
+
+    & h3:last-of-type {
+      margin-top: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+  }
+`;

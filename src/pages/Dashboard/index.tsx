@@ -32,15 +32,6 @@ export interface TableData {
   totalCases: number;
 }
 
-interface CountryInfo {
-  todayCases: number;
-  todayRecovered: number;
-  todayDeaths: number;
-  cases: number;
-  recovered: number;
-  deaths: number;
-}
-
 interface COVID19CountryInfoResponse {
   country: string;
   todayCases: number;
@@ -57,11 +48,17 @@ interface COVID19CountryInfoResponse {
   };
 }
 
+type CountryInfo = Omit<COVID19CountryInfoResponse, 'country' | 'countryInfo'>;
+
 const Dashboard: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountry, setSelectedCountry] = useState('worldwide');
   const [tableData, setTableData] = useState<TableData[]>([]);
   const [mapCountries, setMapCountries] = useState<MapCountry[]>([]);
+  const [casesType, setCasesType] = useState<'cases' | 'recovered' | 'deaths'>(
+    'cases',
+  );
+  const [casesTypeName, setCasesTypeName] = useState('Casos confirmados');
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
     lat: 0,
     lng: 0,
@@ -121,20 +118,22 @@ const Dashboard: React.FC = () => {
       const countryCode = event.target.value as string;
       let url: string;
       let response: AxiosResponse<COVID19CountryInfoResponse>;
+      let coords: { lat: number; lng: number } = { lat: 0, lng: 0 };
 
       if (countryCode === 'worldwide') {
         url = 'all';
         response = await api.get<COVID19CountryInfoResponse>(url);
-        setMapCenter({ lat: 0, lng: 0 });
+        coords = { lat: 0, lng: 0 };
       } else {
         url = `countries/${countryCode}`;
         response = await api.get<COVID19CountryInfoResponse>(url);
-        setMapCenter({
+        coords = {
           lat: response.data.countryInfo.lat,
           lng: response.data.countryInfo.long,
-        });
+        };
       }
 
+      setMapCenter(coords);
       setSelectedCountry(countryCode);
       setSelectedCountryInfo(response.data);
     },
@@ -164,16 +163,34 @@ const Dashboard: React.FC = () => {
 
         <Stats>
           <InfoBox
+            casesType="cases"
+            isActive={casesType === 'cases'}
+            onClick={_ => {
+              setCasesType('cases');
+              setCasesTypeName('Casos confirmados');
+            }}
             title="Casos Confirmados"
             cases={selectedCountryInfo.todayCases}
             total={selectedCountryInfo.cases}
           />
           <InfoBox
+            casesType="recovered"
+            isActive={casesType === 'recovered'}
+            onClick={_ => {
+              setCasesType('recovered');
+              setCasesTypeName('Recuperados');
+            }}
             title="Recuperados"
             cases={selectedCountryInfo.todayRecovered}
             total={selectedCountryInfo.recovered}
           />
           <InfoBox
+            casesType="deaths"
+            isActive={casesType === 'deaths'}
+            onClick={_ => {
+              setCasesType('deaths');
+              setCasesTypeName('Mortes');
+            }}
             title="Mortes"
             cases={selectedCountryInfo.todayDeaths}
             total={selectedCountryInfo.deaths}
@@ -182,7 +199,7 @@ const Dashboard: React.FC = () => {
 
         <Map
           countries={mapCountries}
-          casesType="cases"
+          casesType={casesType}
           center={mapCenter}
           zoom={3}
         />
@@ -192,8 +209,8 @@ const Dashboard: React.FC = () => {
         <CardContent>
           <h3>Casos em Tempo Real por País</h3>
           <Table countries={tableData} />
-          <h3>Casos confirmados no mundo</h3>
-          <LineGraph />
+          <h3>{`${casesTypeName} no mundo`}</h3>
+          <LineGraph historicalType={casesType} />
         </CardContent>
       </Right>
     </Container>
